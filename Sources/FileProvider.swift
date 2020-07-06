@@ -13,7 +13,7 @@ import ImageIO
 public typealias ImageClass = UIImage
 #elseif os(macOS)
 import Cocoa
-import ImageIO
+//import ImageIO
 public typealias ImageClass = NSImage
 #endif
 

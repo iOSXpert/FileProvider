@@ -8,9 +8,9 @@
 
 #if os(macOS) || os(iOS) || os(tvOS)
 import Foundation
-import ImageIO
-import CoreGraphics
-import AVFoundation
+//import ImageIO
+//import CoreGraphics
+//import AVFoundation
 
 extension LocalFileProvider: ExtendedFileProvider {
     open func thumbnailOfFileSupported(path: String) -> Bool {
@@ -197,33 +197,33 @@ public struct LocalFileInformationGenerator {
     
     /// Thumbnail generator closure for audio and music files.
     static public var audioThumbnail: (_ fileURL: URL, _ dimension: CGSize?) -> ImageClass? = { fileURL, dimension in
-        let playerItem = AVPlayerItem(url: fileURL)
-        let metadataList = playerItem.asset.commonMetadata
-        let commonKeyArtwork = AVMetadataKey.commonKeyArtwork
-        for item in metadataList {
-            if item.commonKey == commonKeyArtwork {
-                if let data = item.dataValue {
-                    return LocalFileProvider.scaleDown(data: data, toSize: dimension)
-                }
-            }
-        }
+//        let playerItem = AVPlayerItem(url: fileURL)
+//        let metadataList = playerItem.asset.commonMetadata
+//        let commonKeyArtwork = AVMetadataKey.commonKeyArtwork
+//        for item in metadataList {
+//            if item.commonKey == commonKeyArtwork {
+//                if let data = item.dataValue {
+//                    return LocalFileProvider.scaleDown(data: data, toSize: dimension)
+//                }
+//            }
+//        }
         return nil
     }
     
     /// Thumbnail generator closure for video files.
     static public var videoThumbnail: (_ fileURL: URL, _ dimension: CGSize?) -> ImageClass? = { fileURL, dimension in
-        let asset = AVAsset(url: fileURL)
-        let assetImgGenerate = AVAssetImageGenerator(asset: asset)
-        assetImgGenerate.maximumSize = dimension ?? .zero
-        assetImgGenerate.appliesPreferredTrackTransform = true
-        let time = CMTime(value: asset.duration.value / 3, timescale: asset.duration.timescale)
-        if let cgImage = try? assetImgGenerate.copyCGImage(at: time, actualTime: nil) {
-            #if os(macOS)
-            return ImageClass(cgImage: cgImage, size: .zero)
-            #else
-            return ImageClass(cgImage: cgImage)
-            #endif
-        }
+//        let asset = AVAsset(url: fileURL)
+//        let assetImgGenerate = AVAssetImageGenerator(asset: asset)
+//        assetImgGenerate.maximumSize = dimension ?? .zero
+//        assetImgGenerate.appliesPreferredTrackTransform = true
+//        let time = CMTime(value: asset.duration.value / 3, timescale: asset.duration.timescale)
+//        if let cgImage = try? assetImgGenerate.copyCGImage(at: time, actualTime: nil) {
+//            #if os(macOS)
+//            return ImageClass(cgImage: cgImage, size: .zero)
+//            #else
+//            return ImageClass(cgImage: cgImage)
+//            #endif
+//        }
         return nil
     }
     
@@ -349,31 +349,31 @@ public struct LocalFileInformationGenerator {
         guard fileURL.fileExists else {
             return (dic, keys)
         }
-        let playerItem = AVPlayerItem(url: fileURL)
-        let metadataList = playerItem.asset.commonMetadata
-        for item in metadataList {
-            let commonKey = item.commonKey?.rawValue
-            if let key = makeKeyDescription(commonKey) {
-                if commonKey == "location", let value = item.stringValue, let loc = parseLocationData(value) {
-                    keys.append(key)
-                    let heightStr: String = (loc.height as NSNumber?).map({ ", \($0.format(precision: 0))m" }) ?? ""
-                    dic[key] = "\((loc.latitude as NSNumber).format())°, \((loc.longitude as NSNumber).format())°\(heightStr)"
-                } else if let value = item.dateValue {
-                    keys.append(key)
-                    dic[key] = value
-                } else if let value = item.numberValue {
-                    keys.append(key)
-                    dic[key] = value
-                } else if let value = item.stringValue {
-                    keys.append(key)
-                    dic[key] = value
-                }
-            }
-        }
-        if let ap = try? AVAudioPlayer(contentsOf: fileURL) {
-            add(key: "Duration", value: ap.duration.formatshort)
-            add(key: "Bitrate", value: ap.settings[AVSampleRateKey] as? Int)
-        }
+//        let playerItem = AVPlayerItem(url: fileURL)
+//        let metadataList = playerItem.asset.commonMetadata
+//        for item in metadataList {
+//            let commonKey = item.commonKey?.rawValue
+//            if let key = makeKeyDescription(commonKey) {
+//                if commonKey == "location", let value = item.stringValue, let loc = parseLocationData(value) {
+//                    keys.append(key)
+//                    let heightStr: String = (loc.height as NSNumber?).map({ ", \($0.format(precision: 0))m" }) ?? ""
+//                    dic[key] = "\((loc.latitude as NSNumber).format())°, \((loc.longitude as NSNumber).format())°\(heightStr)"
+//                } else if let value = item.dateValue {
+//                    keys.append(key)
+//                    dic[key] = value
+//                } else if let value = item.numberValue {
+//                    keys.append(key)
+//                    dic[key] = value
+//                } else if let value = item.stringValue {
+//                    keys.append(key)
+//                    dic[key] = value
+//                }
+//            }
+//        }
+//        if let ap = try? AVAudioPlayer(contentsOf: fileURL) {
+//            add(key: "Duration", value: ap.duration.formatshort)
+//            add(key: "Bitrate", value: ap.settings[AVSampleRateKey] as? Int)
+//        }
         return (dic, keys)
     }
     
@@ -397,28 +397,28 @@ public struct LocalFileInformationGenerator {
                 keys.remove(at: index)
             }
         }
-        let asset = AVURLAsset(url: fileURL, options: nil)
-        let videoTracks = asset.tracks(withMediaType: AVMediaType.video)
-        if let videoTrack = videoTracks.first {
-            var bitrate: Float = 0
-            let width = Int(videoTrack.naturalSize.width)
-            let height = Int(videoTrack.naturalSize.height)
-            add(key: "Dimensions", value: "\(width)x\(height)")
-            var duration: Int64 = 0
-            for track in videoTracks {
-                duration += track.timeRange.duration.timescale > 0 ? track.timeRange.duration.value / Int64(track.timeRange.duration.timescale) : 0
-                bitrate += track.estimatedDataRate
-            }
-            add(key: "Duration", value: TimeInterval(duration).formatshort)
-            add(key: "Video Bitrate", value: "\(Int(ceil(bitrate / 1000))) kbps")
-        }
-        let audioTracks = asset.tracks(withMediaType: AVMediaType.audio)
-        // dic["Audio channels"] = audioTracks.count
-        var bitrate: Float = 0
-        for track in audioTracks {
-            bitrate += track.estimatedDataRate
-        }
-        add(key: "Audio Bitrate", value: "\(Int(ceil(bitrate / 1000))) kbps")
+//        let asset = AVURLAsset(url: fileURL, options: nil)
+//        let videoTracks = asset.tracks(withMediaType: AVMediaType.video)
+//        if let videoTrack = videoTracks.first {
+//            var bitrate: Float = 0
+//            let width = Int(videoTrack.naturalSize.width)
+//            let height = Int(videoTrack.naturalSize.height)
+//            add(key: "Dimensions", value: "\(width)x\(height)")
+//            var duration: Int64 = 0
+//            for track in videoTracks {
+//                duration += track.timeRange.duration.timescale > 0 ? track.timeRange.duration.value / Int64(track.timeRange.duration.timescale) : 0
+//                bitrate += track.estimatedDataRate
+//            }
+//            add(key: "Duration", value: TimeInterval(duration).formatshort)
+//            add(key: "Video Bitrate", value: "\(Int(ceil(bitrate / 1000))) kbps")
+//        }
+//        let audioTracks = asset.tracks(withMediaType: AVMediaType.audio)
+//        // dic["Audio channels"] = audioTracks.count
+//        var bitrate: Float = 0
+//        for track in audioTracks {
+//            bitrate += track.estimatedDataRate
+//        }
+//        add(key: "Audio Bitrate", value: "\(Int(ceil(bitrate / 1000))) kbps")
         return (dic, keys)
     }
     

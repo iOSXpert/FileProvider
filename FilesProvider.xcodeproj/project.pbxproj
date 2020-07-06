@@ -60,7 +60,6 @@
 		7958155B1F478ED9003344DD /* HTTPFileProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 795815591F478ED9003344DD /* HTTPFileProvider.swift */; };
 		7958155C1F478ED9003344DD /* HTTPFileProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 795815591F478ED9003344DD /* HTTPFileProvider.swift */; };
 		798654331E8874BC002FA550 /* FTPHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 798654321E8874BC002FA550 /* FTPHelper.swift */; };
-		798D394020D01DA100FFB9EF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 798D393F20D01DA000FFB9EF /* CoreGraphics.framework */; };
 		799396AA1D48C02300086753 /* DropboxFileProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799396931D48C02300086753 /* DropboxFileProvider.swift */; };
 		799396AB1D48C02300086753 /* DropboxFileProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799396931D48C02300086753 /* DropboxFileProvider.swift */; };
 		799396AC1D48C02300086753 /* DropboxFileProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799396931D48C02300086753 /* DropboxFileProvider.swift */; };
@@ -112,9 +111,6 @@
 		79BD63A81E2CC2940035128C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79BD63A71E2CC2940035128C /* CoreGraphics.framework */; };
 		79BD63AA1E2CC2BB0035128C /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79BD63A91E2CC2BB0035128C /* AVFoundation.framework */; };
 		79BD63AC1E2CC2C20035128C /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79BD63AB1E2CC2C20035128C /* ImageIO.framework */; };
-		79BD63B01E2CC3300035128C /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 79BD63AF1E2CC3300035128C /* libxml2.tbd */; };
-		79BD63B21E2CC3350035128C /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79BD63B11E2CC3350035128C /* ImageIO.framework */; };
-		79BD63B81E2CC38D0035128C /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79BD63B71E2CC38D0035128C /* AVFoundation.framework */; };
 		79BD63BA1E2CC39B0035128C /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 79BD63B91E2CC39B0035128C /* libxml2.tbd */; };
 		79BD63BE1E2CC3C20035128C /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79BD63BD1E2CC3C20035128C /* ImageIO.framework */; };
 		79BD63C01E2CC3CD0035128C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79BD63BF1E2CC3CD0035128C /* CoreGraphics.framework */; };
@@ -146,6 +142,19 @@
 			remoteInfo = "FilesProvider OSX";
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		7AE76EE024B361CF001C5B85 /* Copy Files */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Copy Files";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		7902C0851D61B56D00564440 /* RemoteSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteSession.swift; sourceTree = "<group>"; };
@@ -228,10 +237,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				79BD63B81E2CC38D0035128C /* AVFoundation.framework in Frameworks */,
-				798D394020D01DA100FFB9EF /* CoreGraphics.framework in Frameworks */,
-				79BD63B21E2CC3350035128C /* ImageIO.framework in Frameworks */,
-				79BD63B01E2CC3300035128C /* libxml2.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -450,6 +455,7 @@
 				799396711D48B80D00086753 /* Frameworks */,
 				799396721D48B80D00086753 /* Headers */,
 				799396731D48B80D00086753 /* Resources */,
+				7AE76EE024B361CF001C5B85 /* Copy Files */,
 			);
 			buildRules = (
 			);
@@ -879,6 +885,7 @@
 		7993967B1D48B80D00086753 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -904,6 +911,10 @@
 				INFOPLIST_FILE = "Pod/Info-MacOS.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SDKROOT)/usr/lib/swift",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mousavian.FilesProvider-OSX";
@@ -918,6 +929,7 @@
 		7993967C1D48B80D00086753 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -938,6 +950,10 @@
 				INFOPLIST_FILE = "Pod/Info-MacOS.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SDKROOT)/usr/lib/swift",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mousavian.FilesProvider-OSX";

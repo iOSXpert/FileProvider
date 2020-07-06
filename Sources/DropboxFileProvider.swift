@@ -9,7 +9,7 @@
 
 import Foundation
 #if os(macOS) || os(iOS) || os(tvOS)
-import CoreGraphics
+//import CoreGraphics
 #endif
 
 /**
